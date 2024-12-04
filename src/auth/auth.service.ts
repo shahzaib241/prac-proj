@@ -10,6 +10,7 @@ export class AuthService {
         //hash the password and match the hash password using bcrypt
         if (user?.password !== pass) {
             throw new UnauthorizedException()
+            console.log("hello")
         }
         
         
