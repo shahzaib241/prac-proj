@@ -16,12 +16,20 @@ export class UsersService {
     return this.usersRepository.find()
   }
 
-  findOne(id: string): Promise<User> {
+  findOneById(id: string): Promise<User> {
     return this.usersRepository.findOne({
       where: {
         id
       },
       relations: ["bookmarks"]
+    })
+  }
+
+  findOneByEmail(email: string): Promise<User> {
+    return this.usersRepository.findOne({
+      where: {
+        email
+      }
     })
   }
 
