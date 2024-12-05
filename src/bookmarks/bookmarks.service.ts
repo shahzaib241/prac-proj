@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bookmark } from './bookmarks.entity';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/users.entity';
-import { throwError } from 'rxjs';
 
 @Injectable()
 export class BookmarksService {
@@ -19,9 +18,9 @@ export class BookmarksService {
         }
     })
     if (!user) {
-        throw new Error("User Not Found")
+        throw new NotFoundException("user not found");
     }
-    const newBookmark = this.bookmarksRepository.create({...bookmark, user})
+    const newBookmark = this.bookmarksRepository.create({...bookmark})
     return this.bookmarksRepository.save(newBookmark)
   }
 

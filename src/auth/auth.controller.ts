@@ -2,20 +2,20 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/commo
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto';
 import { SignUpDto } from './dto/SignUpDto.sto';
-import { Public } from './utils/publicRoutes';
+import { Public } from 'src/utilis/publicRoutes';
+import { SuccessResponse } from 'src/dto/globalResponse.dto';
+
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService){}
 
-    @HttpCode(HttpStatus.OK)
     @Public()
     @Post('login')
-    signIn(@Body() signInDto: SignInDto) {
+    signIn(@Body() signInDto: SignInDto):Promise<SuccessResponse<{access_token: string}>> {
         return this.authService.signIn(signInDto.email, signInDto.password);
     }
 
-    @HttpCode(HttpStatus.CREATED)
     @Public()
     @Post('signup')
     signUp(@Body() signUpDto: SignUpDto) {
