@@ -1,34 +1,31 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './users.entity';
 import { createUserDto } from './dto';
+import { Public } from 'src/auth/utils/publicRoutes';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly usersService: UsersService) { }
+  // @Get()
+  // findAll(): Promise<User[]> {
+  //   return this.usersService.findAll()
+  // }
+  
   @Get()
-  findAll(): Promise<User[]> {
-    return this.usersService.findAll()
+  findOne(@Request() req): Promise<User> {
+    const userId = req.user.userId;
+    return this.usersService.findOneById(userId)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.usersService.findOne(id)
+  @Put()
+  update(@Request() req, @Body() user: User): Promise<User> {
+    return this.usersService.update(req.user.userId, user)
   }
 
-  @Post()
-  create(@Body() user: createUserDto): Promise<User> {
-    return this.usersService.create(user)
-  }
-
-  @Put(':id')
-  update(@Param('id') id: string, @Body() user: User): Promise<User> {
-    return this.usersService.update(id, user)
-  }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<{ message: string; }> {
-    await this.usersService.remove(id)
+  @Delete()
+  async remove(@Request() req): Promise<{ message: string; }> {
+    await this.usersService.remove(req.user.userId)
     const message = "user removed"
     return {message}
   }

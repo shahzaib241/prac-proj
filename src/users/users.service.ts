@@ -4,19 +4,15 @@ import { User } from './users.entity';
 import { Repository } from 'typeorm';
 import { Bookmark } from 'src/bookmarks/bookmarks.entity';
 import { createUserDto } from './dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(Bookmark) private bookmarksRepository: Repository<Bookmark>,
-    @InjectRepository(User) private usersRepository: Repository<User>  
+    @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find()
-  }
-
-  findOne(id: string): Promise<User> {
+  findOneById(id: string): Promise<User> {
     return this.usersRepository.findOne({
       where: {
         id
@@ -25,8 +21,16 @@ export class UsersService {
     })
   }
 
+  findOneByEmail(email: string): Promise<User> {
+    return this.usersRepository.findOne({
+      where: {
+        email
+      }
+    })
+  }
+
   create(user: createUserDto): Promise<User> {
-    return this.usersRepository.save(user)
+    return this.usersRepository.save(user);
   }
 
   async update(id: string, user: Partial<User>) {

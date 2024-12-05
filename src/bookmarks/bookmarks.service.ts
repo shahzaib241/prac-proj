@@ -12,14 +12,6 @@ export class BookmarksService {
     @InjectRepository(User) private userRepository: Repository<User>
 ) {}
 
-  findAll(): Promise<Bookmark[]> {
-    return this.bookmarksRepository.find()
-  }
-
-  findOne(id: string): Promise<Bookmark> {
-    return this.bookmarksRepository.findOneBy({ id })
-  }
-
   async create(userId: string, bookmark: Bookmark): Promise<Bookmark> {
     const user = await this.userRepository.findOne({
         where: {
@@ -42,6 +34,7 @@ export class BookmarksService {
       ...user
     })
   }
+  
   async remove(id: string): Promise<void> {
     await this.bookmarksRepository.delete(id)
   }

@@ -1,23 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request } from '@nestjs/common';
 import { BookmarksService } from './bookmarks.service';
 import { Bookmark } from './bookmarks.entity';
 
 @Controller('Bookmarks')
 export class BookmarkController {
   constructor(private readonly bookmarksService: BookmarksService) { }
-  @Get()
-  findAll(): Promise<Bookmark[]> {
-    return this.bookmarksService.findAll()
-  }
 
-  @Get(':id')
-  findOne(@Param('id') id: string): Promise<Bookmark> {
-    return this.bookmarksService.findOne(id)
-  }
-
-  @Post(":userId")
-  create(@Param('userId') userId: string, @Body() bookmark: Bookmark): Promise<Bookmark> {
-    return this.bookmarksService.create(userId, bookmark)
+  @Post()
+  create(@Request() req, @Body() bookmark: Bookmark): Promise<Bookmark> {
+    return this.bookmarksService.create(req.user.userId, bookmark)
   }
 
   @Put(':id')
@@ -28,7 +19,7 @@ export class BookmarkController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<{ message: string; }> {
     await this.bookmarksService.remove(id)
-    const message = "user removed"
+    const message = "bookmark removed"
     return {message}
   }
 }
