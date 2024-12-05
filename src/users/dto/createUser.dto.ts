@@ -1,9 +1,10 @@
-import { IsString, IsUUID, IsEmail } from 'class-validator';
+import { IsString, IsEmail, IsOptional } from 'class-validator';
 
 export class createUserDto {
     @IsString()
     firstName: string;
 
+    @IsOptional()
     @IsString()
     lastName?: string;
 
