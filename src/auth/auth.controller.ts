@@ -11,8 +11,8 @@ export class AuthController {
     constructor(private authService: AuthService){}
 
     @Public()
-    @Post('login')
-    signIn(@Body() signInDto: SignInDto):Promise<SuccessResponse<{access_token: string}>> {
+    @Post('signin')
+    signIn(@Body() signInDto: SignInDto){
         return this.authService.signIn(signInDto.email, signInDto.password);
     }
 

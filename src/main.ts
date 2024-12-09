@@ -1,11 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { AllExceptionFilter } from './utilis/all-exceptions.filter';
+import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './utilis/http-exception.filter';
+import { TransformInterceptor } from './utilis/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new AllExceptionFilter());
+  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new TransformInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
+
   const config = new DocumentBuilder()
   .setTitle('Bookmark Project')
   .setDescription('The Bookmark API description')

@@ -2,10 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { Repository } from 'typeorm';
-import { Bookmark } from 'src/bookmarks/bookmarks.entity';
 import { createUserDto } from './dto';
-import { SuccessResponse } from 'src/dto/globalResponse.dto';
-import { createSuccessResponse } from 'src/utilis/createApiResponse';
 
 @Injectable()
 export class UsersService {
@@ -13,7 +10,7 @@ export class UsersService {
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
 
-  async findOneById(id: string): Promise<SuccessResponse<User>> {
+  async findOneById(id: string): Promise<User> {
     const user = await this.usersRepository.findOne({
       where: {
         id
@@ -23,7 +20,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException("User not found")
     }
-    return createSuccessResponse(200, "user found", user)
+    return user
   }
 
   async findOneByEmail(email: string): Promise<User> {
@@ -43,7 +40,7 @@ export class UsersService {
     return newUser
   }
 
-  async update(id: string, user: Partial<User>): Promise<SuccessResponse<User>> {
+  async update(id: string, user: Partial<User>): Promise<User> {
     const property = await this.usersRepository.findOne({
       where: {id}
     })
@@ -51,11 +48,11 @@ export class UsersService {
       ...property,
       ...user
     })
-    return createSuccessResponse(200, "user updated", updatedUser)
+    return updatedUser
   }
 
-  async remove(id: string): Promise<SuccessResponse<{data: null}>> {
+  async remove(id: string): Promise<string> {
     const user = await this.usersRepository.delete(id)
-    return createSuccessResponse(200, "user removed", null)
+    return "user removed"
   }
 }
